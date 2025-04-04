@@ -25,6 +25,7 @@
 
 #include "log.h"
 #include "translation.h"
+#include "QFileInfo"
 
 using namespace mu::appshell;
 using namespace muse;
@@ -37,15 +38,6 @@ ManualRepairModel::ManualRepairModel(QObject* parent)
 
 void ManualRepairModel::load()
 {
-    languagesConfiguration()->currentLanguageCode().ch.onReceive(this, [this](const QString& languageCode) {
-        emit currentLanguageCodeChanged(languageCode);
-    });
-
-    setIsNeedRestart(languagesService()->needRestartToApplyLanguageChange());
-    languagesService()->needRestartToApplyLanguageChangeChanged().onReceive(this, [this](bool need) {
-        setIsNeedRestart(need);
-    });
-
     configuration()->startupModeTypeChanged().onNotify(this, [this]() {
         emit startupModesChanged();
     });
@@ -55,60 +47,50 @@ void ManualRepairModel::load()
     });
 }
 
-void ManualRepairModel::checkUpdateForCurrentLanguage()
+QStringList ManualRepairModel::musicXMLPathFilter() const
 {
-    QString languageCode = currentLanguageCode();
-
-    m_languageUpdateProgress = languagesService()->update(languageCode);
-
-    m_languageUpdateProgress.progressChanged.onReceive(this, [this](int64_t current, int64_t total, const std::string& status) {
-        emit receivingUpdateForCurrentLanguage(current, total, QString::fromStdString(status));
-    });
-
-    m_languageUpdateProgress.finished.onReceive(this, [this, languageCode](const ProgressResult& res) {
-        if (res.ret.code() == static_cast<int>(Err::AlreadyUpToDate)) {
-            QString msg = muse::qtrc("appshell/preferences", "Your version of %1 is up to date.")
-                          .arg(languagesService()->language(languageCode).name);
-            interactive()->info(msg.toStdString(), std::string());
-        }
-    });
+    return { muse::qtrc("appshell/repair", "MusicXML file") + " (*.musicXML)" };
 }
 
-QVariantList ManualRepairModel::languages() const
+QStringList ManualRepairModel::scanPathFilter() const
 {
-    QList<Language> languages = languagesService()->languages().values();
-
-    std::sort(languages.begin(), languages.end(), [](const Language& l, const Language& r) {
-        return l.code < r.code;
-    });
-
-    QVariantList result;
-
-    for (const Language& language : languages) {
-        QVariantMap languageObj;
-        languageObj["code"] = language.code;
-        languageObj["name"] = language.name;
-        result << languageObj;
-    }
-
-    if (languagesService()->hasPlaceholderLanguage()) {
-        QVariantMap placeholderLanguageObj;
-        placeholderLanguageObj["code"] = PLACEHOLDER_LANGUAGE_CODE;
-        placeholderLanguageObj["name"] = "«Placeholder translations»";
-        result.prepend(placeholderLanguageObj);
-    }
-
-    QVariantMap systemLanguageObj;
-    systemLanguageObj["code"] = SYSTEM_LANGUAGE_CODE;
-    systemLanguageObj["name"] = muse::qtrc("appshell/preferences", "System default");
-    result.prepend(systemLanguageObj);
-
-    return result;
+    return { muse::qtrc("appshell/repair", "PDF file") + " (*.pdf)",
+             muse::qtrc("appshell/repair", "JPEG file") + " (*.jpg,*.jpeg)"};
 }
 
-QString ManualRepairModel::currentLanguageCode() const
+void ManualRepairModel::startRepair(const QString& score, const QString& scan) const
 {
-    return languagesConfiguration()->currentLanguageCode().val;
+    // Check whether there's an open project already. If there is, close it.
+    projectFilesController()->closeOpenedProject();
+
+    // Open the chosen MusicXML project file.
+    QUrl url = QUrl::fromLocalFile(score);
+    Ret ret = projectFilesController()->openProject(url);
+    if (!ret) {
+        // Failure to open
+        LOGE() << ret.toString();
+    }
+    else
+    {
+        // TODO : manual repair logic should occur here.
+
+        // What additional pieces should we add?
+        // We would probably benefit from adding additional XML information that denotes some issue with the score.
+        // What do we want to do then?
+        // We could add some panel that allows the user to select one or multiple notes and "tag" them.
+
+        // Create a temporary copy of the musicXML file with filename suffix "_repaired" appended
+        QUrl nonLocalUrl(score);
+        QString scorePath = nonLocalUrl.toString(QUrl::RemoveFilename);
+        QFileInfo info(nonLocalUrl.toString());
+        QString repairedPath = scorePath + info.baseName() + "_repaired" + "." + info.suffix();
+
+        // Get the master notation from the open project.
+        notation::INotationPtrList notations;
+        notations.push_back(globalContext()->currentMasterNotation()->notation());
+        project::INotationWriter::UnitType m_selectedUnitType = project::INotationWriter::UnitType::PER_PART;
+        exportProjectScenario()->exportScores(notations, repairedPath, m_selectedUnitType,false);
+    }
 }
 
 QStringList ManualRepairModel::keyboardLayouts() const
@@ -122,6 +104,11 @@ QString ManualRepairModel::currentKeyboardLayout() const
     return shortcutsConfiguration()->currentKeyboardLayout();
 }
 
+mu::project::INotationProjectPtr ManualRepairModel::currentNotationProject() const
+{
+    return globalContext()->currentProject();
+}
+
 bool ManualRepairModel::isOSCRemoteControl() const
 {
     return false;
@@ -130,16 +117,6 @@ bool ManualRepairModel::isOSCRemoteControl() const
 int ManualRepairModel::oscPort() const
 {
     return 0;
-}
-
-void ManualRepairModel::setCurrentLanguageCode(const QString& currentLanguageCode)
-{
-    if (currentLanguageCode == this->currentLanguageCode()) {
-        return;
-    }
-
-    languagesConfiguration()->setCurrentLanguageCode(currentLanguageCode);
-    emit currentLanguageCodeChanged(currentLanguageCode);
 }
 
 void ManualRepairModel::setCurrentKeyboardLayout(const QString& keyboardLayout)
@@ -220,37 +197,4 @@ ManualRepairModel::StartModeList ManualRepairModel::allStartupModes() const
     }
 
     return modes;
-}
-
-QStringList ManualRepairModel::scorePathFilter() const
-{
-    return { muse::qtrc("appshell/preferences", "MuseScore file") + " (*.mscz)",
-             muse::qtrc("appshell/preferences", "All") + " (*)" };
-}
-
-void ManualRepairModel::setCurrentStartupMode(int modeIndex)
-{
-    StartModeList modes = allStartupModes();
-
-    if (modeIndex < 0 || modeIndex >= modes.size()) {
-        return;
-    }
-
-    StartupModeType selectedType = modes[modeIndex].type;
-    if (selectedType == configuration()->startupModeType()) {
-        return;
-    }
-
-    configuration()->setStartupModeType(selectedType);
-    emit startupModesChanged();
-}
-
-void ManualRepairModel::setStartupScorePath(const QString& scorePath)
-{
-    if (scorePath.isEmpty() || scorePath == configuration()->startupScorePath().toQString()) {
-        return;
-    }
-
-    configuration()->setStartupScorePath(scorePath);
-    emit startupModesChanged();
 }

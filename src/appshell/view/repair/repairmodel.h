@@ -30,7 +30,7 @@
 #include "ui/view/iconcodes.h"
 
 #include "iappshellconfiguration.h"
-#include "../preferences/preferencepageitem.h"
+#include "repairpageitem.h"
 #include "iinteractive.h"
 
 namespace mu::appshell {
@@ -79,12 +79,12 @@ private:
         ItemRole = Qt::UserRole + 1
     };
 
-    PreferencePageItem* makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon = muse::ui::IconCode::Code::NONE,
-                                 const QString& path = "", const QList<PreferencePageItem*>& children = {}) const;
+    RepairPageItem* makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon = muse::ui::IconCode::Code::NONE,
+                                 const QString& path = "", const QList<RepairPageItem*>& children = {}) const;
 
-    PreferencePageItem* modelIndexToItem(const QModelIndex& index) const;
+    RepairPageItem* modelIndexToItem(const QModelIndex& index) const;
 
-    PreferencePageItem* m_rootItem = nullptr;
+    RepairPageItem* m_rootItem = nullptr;
     QString m_currentPageId;
 };
 }

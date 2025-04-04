@@ -65,9 +65,6 @@ RepairPage {
                 repairModel.checkUpdateForCurrentLanguage()
             }
         }
-
-        SeparatorLine { }
-
         ProgramStartSection {
             startupModes: repairModel.startupModes
             scorePathFilter: repairModel.scorePathFilter()

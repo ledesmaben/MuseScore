@@ -37,52 +37,43 @@ RepairPage {
 
     ManualRepairModel {
         id: repairModel
-
-        onReceivingUpdateForCurrentLanguage: function(current, total, status) {
-            languagesSection.setUpdateProgress(current, total, status)
-        }
     }
 
     Column {
         width: parent.width
         spacing: root.sectionsSpacing
 
-        LanguagesSection {
-            id: languagesSection
+        ManualRepairSection {
+            id: manualrepairSection
 
-            languages: repairModel.languages
-            currentLanguageCode: repairModel.currentLanguageCode
+            property string input_musicxml: ""
+            property string input_scans: ""
+            property string output_musicxml: ""
+
+            // Filters from the repairModel which dictate what the file
+            // selection may choose.
+            property var musicXMLPathFilter: repairModel.musicXMLPathFilter()
+            property var scanPathFilter: repairModel.scanPathFilter()
+
             isNeedRestart: repairModel.isNeedRestart
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
 
-            onLanguageSelected: function(languageCode) {
-                repairModel.currentLanguageCode = languageCode
+            onSelectInputMusicXML: function(selection) {
+               input_musicxml = selection
             }
 
-            onCheckForUpdateRequested: {
-                repairModel.checkUpdateForCurrentLanguage()
+            onSelectInputScans: function(selection) {
+                input_scans = selection
+            }
+
+            onStartRepair: function(input_musicxml,input_scans) {
+                repairModel.startRepair(input_musicxml,input_scans)
             }
         }
 
         SeparatorLine { }
-
-        ProgramStartSection {
-            startupModes: repairModel.startupModes
-            scorePathFilter: repairModel.scorePathFilter()
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 2
-
-            onCurrentStartupModesChanged: function(index) {
-                repairModel.setCurrentStartupMode(index)
-            }
-
-            onStartupScorePathChanged: function(path) {
-                repairModel.setStartupScorePath(path)
-            }
-        }
 
         /*
          * TODO: https://github.com/musescore/MuseScore/issues/9807

@@ -98,6 +98,8 @@ set(MODULE_SRC
 	${CMAKE_CURRENT_LIST_DIR}/view/repair/manualrepairmodel.h
 	${CMAKE_CURRENT_LIST_DIR}/view/repair/autorepairmodel.cpp
 	${CMAKE_CURRENT_LIST_DIR}/view/repair/autorepairmodel.h
+	${CMAKE_CURRENT_LIST_DIR}/view/repair/repairpageitem.cpp
+	${CMAKE_CURRENT_LIST_DIR}/view/repair/repairpageitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/publish/publishtoolbarmodel.cpp

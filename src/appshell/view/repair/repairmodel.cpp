@@ -50,7 +50,7 @@ QModelIndex RepairModel::index(int row, int column, const QModelIndex& parent) c
         return QModelIndex();
     }
 
-    PreferencePageItem* parentItem = nullptr;
+    RepairPageItem* parentItem = nullptr;
 
     if (!parent.isValid()) {
         parentItem = m_rootItem;
@@ -62,7 +62,7 @@ QModelIndex RepairModel::index(int row, int column, const QModelIndex& parent) c
         return QModelIndex();
     }
 
-    PreferencePageItem* childItem = parentItem->childAtRow(row);
+    RepairPageItem* childItem = parentItem->childAtRow(row);
 
     if (childItem) {
         return createIndex(row, column, childItem);
@@ -73,12 +73,12 @@ QModelIndex RepairModel::index(int row, int column, const QModelIndex& parent) c
 
 QModelIndex RepairModel::parent(const QModelIndex& child) const
 {
-    PreferencePageItem* childItem = modelIndexToItem(child);
+    RepairPageItem* childItem = modelIndexToItem(child);
     if (!childItem) {
         return QModelIndex();
     }
 
-    PreferencePageItem* parentItem = qobject_cast<PreferencePageItem*>(childItem->parentItem());
+    RepairPageItem* parentItem = qobject_cast<RepairPageItem*>(childItem->parentItem());
 
     if (parentItem == m_rootItem) {
         return QModelIndex();
@@ -89,7 +89,7 @@ QModelIndex RepairModel::parent(const QModelIndex& child) const
 
 int RepairModel::rowCount(const QModelIndex& parent) const
 {
-    PreferencePageItem* parentItem = nullptr;
+    RepairPageItem* parentItem = nullptr;
 
     if (!parent.isValid()) {
         parentItem = m_rootItem;
@@ -115,7 +115,7 @@ QVariant RepairModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    PreferencePageItem* item = modelIndexToItem(index);
+    RepairPageItem* item = modelIndexToItem(index);
 
     if (!item) {
         return QVariant();
@@ -151,65 +151,17 @@ void RepairModel::load(const QString& currentPageId)
         }
     }
 
-    m_rootItem = new PreferencePageItem();
+    m_rootItem = new RepairPageItem();
 
-    QList<PreferencePageItem*> items {
+    QList<RepairPageItem*> items {
         makeItem("Manual", QT_TRANSLATE_NOOP("appshell/repair", "Manual"), IconCode::Code::CONFIGURE,
                  "Repair/ManualRepairPage.qml"),
 
         makeItem("Auto", QT_TRANSLATE_NOOP("appshell/repair", "Auto"), IconCode::Code::CONFIGURE,
                  "Repair/AutoRepairPage.qml"),
-
-        //makeItem("general", QT_TRANSLATE_NOOP("appshell/preferences", "General"), IconCode::Code::SETTINGS_COG,
-        //         "Preferences/GeneralPreferencesPage.qml"),
-
-        // # BGL NOTE : The below items are the other preference pages, shown as an example for now. If we want to add items,
-        //              we will need to follow this pattern. Otherwise, we can just edit the above.
-
-        // makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Appearance"), IconCode::Code::EYE_OPEN,
-        //          "Preferences/AppearancePreferencesPage.qml"),
-
-        // makeItem("canvas", QT_TRANSLATE_NOOP("appshell/preferences", "Canvas"), IconCode::Code::NEW_FILE,
-        //          "Preferences/CanvasPreferencesPage.qml"),
-
-        // makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Save & publish"), IconCode::Code::CLOUD_FILE,
-        //          "Preferences/SaveAndPublishPreferencesPage.qml"),
-
-        // makeItem("note-input", QT_TRANSLATE_NOOP("appshell/preferences", "Note input"), IconCode::Code::EDIT,
-        //          "Preferences/NoteInputPreferencesPage.qml"),
-
-        // makeItem("score", QT_TRANSLATE_NOOP("appshell/preferences", "Score"), IconCode::Code::SCORE,
-        //          "Preferences/ScorePreferencesPage.qml"),
-
-        // makeItem("audio-midi", QT_TRANSLATE_NOOP("appshell/preferences", "Audio & MIDI"), IconCode::Code::AUDIO,
-        //          "Preferences/AudioMidiPreferencesPage.qml"),
-
-        // makeItem("midi-device-mapping", QT_TRANSLATE_NOOP("appshell/preferences", "MIDI mappings"), IconCode::Code::MIDI_INPUT,
-        //          "Preferences/MidiDeviceMappingPreferencesPage.qml"),
-
-        // makeItem("percussion", QT_TRANSLATE_NOOP("appshell/preferences", "Percussion"), IconCode::Code::PERCUSSION,
-        //          "Preferences/PercussionPreferencesPage.qml"),
-
-        // makeItem("import", QT_TRANSLATE_NOOP("appshell/preferences", "Import"), IconCode::Code::IMPORT,
-        //          "Preferences/ImportPreferencesPage.qml"),
-
-        // makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
-        //          "Preferences/ShortcutsPreferencesPage.qml"),
-
-        // makeItem("update", QT_TRANSLATE_NOOP("appshell/preferences", "Update"), IconCode::Code::UPDATE,
-        //          "Preferences/UpdatePreferencesPage.qml"),
-
-        // makeItem("general-folders", QT_TRANSLATE_NOOP("appshell/preferences", "Folders"), IconCode::Code::OPEN_FILE,
-        //          "Preferences/FoldersPreferencesPage.qml"),
-
-        // makeItem("advanced", QT_TRANSLATE_NOOP("appshell/preferences", "Advanced"), IconCode::Code::CONFIGURE,
-        //          "Preferences/AdvancedPreferencesPage.qml"),
-
-        // makeItem("braille", QT_TRANSLATE_NOOP("appshell/preferences", "Braille"), IconCode::Code::BRAILLE,
-        //          "Preferences/BraillePreferencesPage.qml")
     };
 
-    for (PreferencePageItem* item: items) {
+    for (RepairPageItem* item: items) {
         m_rootItem->appendChild(item);
     }
 
@@ -260,19 +212,19 @@ void RepairModel::cancel()
 void RepairModel::selectRow(const QModelIndex& rowIndex)
 {
     QModelIndex parentItemIndex = parent(rowIndex);
-    PreferencePageItem* parentItem = nullptr;
+    RepairPageItem* parentItem = nullptr;
     if (!parentItemIndex.isValid()) {
         parentItem = m_rootItem;
     } else {
         parentItem = modelIndexToItem(parentItemIndex);
     }
 
-    QList<PreferencePageItem*> children = parentItem->childrenItems();
-    for (PreferencePageItem* child: children) {
+    QList<RepairPageItem*> children = parentItem->childrenItems();
+    for (RepairPageItem* child: children) {
         child->setExpanded(false);
     }
 
-    PreferencePageItem* selectedItem = parentItem->childAtRow(rowIndex.row());
+    RepairPageItem* selectedItem = parentItem->childAtRow(rowIndex.row());
     if (!selectedItem) {
         return;
     }
@@ -283,12 +235,12 @@ void RepairModel::selectRow(const QModelIndex& rowIndex)
 
 QVariantList RepairModel::availablePages() const
 {
-    std::function<QVariantList(const PreferencePageItem*)> childPages;
-    childPages = [&childPages](const PreferencePageItem* item) {
+    std::function<QVariantList(const RepairPageItem*)> childPages;
+    childPages = [&childPages](const RepairPageItem* item) {
         QVariantList result;
 
         for (int i = 0; i < item->childCount(); ++i) {
-            PreferencePageItem* child = item->childAtRow(i);
+            RepairPageItem* child = item->childAtRow(i);
             QVariantMap childObj;
             childObj["id"] = child->id();
             childObj["path"] = child->path();
@@ -317,18 +269,18 @@ void RepairModel::setCurrentPageId(QString currentPageId)
     emit currentPageIdChanged(m_currentPageId);
 }
 
-PreferencePageItem* RepairModel::makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon,
+RepairPageItem* RepairModel::makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon,
                                                const QString& path,
-                                               const QList<PreferencePageItem*>& children) const
+                                               const QList<RepairPageItem*>& children) const
 {
-    PreferencePageItem* item = new PreferencePageItem();
+    RepairPageItem* item = new RepairPageItem();
     item->setId(id);
     item->setTitle(title);
     item->setIcon(icon);
     item->setPath(path);
     item->setExpanded(id == currentPageId());
 
-    for (PreferencePageItem* child: children) {
+    for (RepairPageItem* child: children) {
         item->appendChild(child);
 
         if (child->id() == currentPageId()) {
@@ -339,7 +291,7 @@ PreferencePageItem* RepairModel::makeItem(const QString& id, const QString& titl
     return item;
 }
 
-PreferencePageItem* RepairModel::modelIndexToItem(const QModelIndex& index) const
+RepairPageItem* RepairModel::modelIndexToItem(const QModelIndex& index) const
 {
-    return static_cast<PreferencePageItem*>(index.internalPointer());
+    return static_cast<RepairPageItem*>(index.internalPointer());
 }

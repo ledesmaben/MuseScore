@@ -24,26 +24,25 @@
 
 #include <QObject>
 
-#include "progress.h"
-
+#include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "iappshellconfiguration.h"
 #include "async/asyncable.h"
 
+#include "project/internal/iexportprojectscenario.h"
+#include "project/iprojectfilescontroller.h"
+
 #include "global/iinteractive.h"
-#include "languages/ilanguagesconfiguration.h"
-#include "languages/ilanguagesservice.h"
 #include "shortcuts/ishortcutsconfiguration.h"
-#include "project/iprojectconfiguration.h"
+
 
 namespace mu::appshell {
 class ManualRepairModel : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariantList languages READ languages NOTIFY languagesChanged)
-    Q_PROPERTY(QString currentLanguageCode READ currentLanguageCode WRITE setCurrentLanguageCode NOTIFY currentLanguageCodeChanged)
-
+    // These properties are what ultimately what show up in the qml repairModel in ManualRepairPage.qml.
+    // It seems
     Q_PROPERTY(QStringList keyboardLayouts READ keyboardLayouts CONSTANT)
     Q_PROPERTY(QString currentKeyboardLayout READ currentKeyboardLayout WRITE setCurrentKeyboardLayout NOTIFY currentKeyboardLayoutChanged)
 
@@ -52,30 +51,27 @@ class ManualRepairModel : public QObject, public muse::Injectable, public muse::
 
     Q_PROPERTY(bool isNeedRestart READ isNeedRestart WRITE setIsNeedRestart NOTIFY isNeedRestartChanged)
 
-    Q_PROPERTY(QVariantList startupModes READ startupModes NOTIFY startupModesChanged)
-
     muse::Inject<IAppShellConfiguration> configuration = { this };
+    muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<muse::IInteractive> interactive = { this };
-    muse::Inject<muse::languages::ILanguagesConfiguration> languagesConfiguration = { this };
-    muse::Inject<muse::languages::ILanguagesService> languagesService = { this };
     muse::Inject<muse::shortcuts::IShortcutsConfiguration> shortcutsConfiguration = { this };
+    muse::Inject<project::IProjectFilesController> projectFilesController = { this };
+    muse::Inject<project::IExportProjectScenario> exportProjectScenario = { this };
 
 public:
     explicit ManualRepairModel(QObject* parent = nullptr);
 
+    // These are the functions invokable from a qml.
     Q_INVOKABLE void load();
-    Q_INVOKABLE void checkUpdateForCurrentLanguage();
 
-    Q_INVOKABLE void setCurrentStartupMode(int modeIndex);
-    Q_INVOKABLE void setStartupScorePath(const QString& scorePath);
-
-    Q_INVOKABLE QStringList scorePathFilter() const;
-
-    QVariantList languages() const;
-    QString currentLanguageCode() const;
+    Q_INVOKABLE QStringList musicXMLPathFilter() const;
+    Q_INVOKABLE QStringList scanPathFilter() const;
+    Q_INVOKABLE void startRepair(const QString& score, const QString& scan) const;
 
     QStringList keyboardLayouts() const;
     QString currentKeyboardLayout() const;
+
+    project::INotationProjectPtr currentNotationProject() const;
 
     QVariantList startupModes() const;
 
@@ -84,7 +80,6 @@ public:
     bool isNeedRestart() const;
 
 public slots:
-    void setCurrentLanguageCode(const QString& currentLanguageCode);
     void setCurrentKeyboardLayout(const QString& keyboardLayout);
     void setIsOSCRemoteControl(bool isOSCRemoteControl);
     void setOscPort(int oscPort);
@@ -97,13 +92,11 @@ signals:
     void isOSCRemoteControlChanged(bool isOSCRemoteControl);
     void oscPortChanged(int oscPort);
 
-    void receivingUpdateForCurrentLanguage(int current, int total, QString status);
-    void isNeedRestartChanged();
+     void isNeedRestartChanged();
 
     void startupModesChanged();
 
 private:
-    muse::Progress m_languageUpdateProgress;
 
     bool m_isNeedRestart = false;
 

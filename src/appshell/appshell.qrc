@@ -108,5 +108,7 @@
         <file>qml/Repair/internal/RepairMenu.qml</file>
         <file>qml/Repair/AutoRepairPage.qml</file>
         <file>qml/Repair/ManualRepairPage.qml</file>
+        <file>qml/Repair/internal/BaseRepairSection.qml</file>
+        <file>qml/Repair/internal/ManualRepairSection.qml</file>
     </qresource>
 </RCC>

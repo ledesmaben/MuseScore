@@ -29,7 +29,6 @@
 #include "ui/iuiactionsregister.h"
 #include "ui/view/iconcodes.h"
 
-#include "iappshellconfiguration.h"
 #include "repairpageitem.h"
 #include "iinteractive.h"
 
@@ -41,7 +40,6 @@ class RepairModel : public QAbstractItemModel, public muse::Injectable
     Q_PROPERTY(QString currentPageId READ currentPageId WRITE setCurrentPageId NOTIFY currentPageIdChanged)
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher = { this };
-    muse::Inject<IAppShellConfiguration> configuration = { this };
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister = { this };
     muse::Inject<muse::IInteractive> interactive = { this };
 
@@ -59,10 +57,6 @@ public:
     QString currentPageId() const;
 
     Q_INVOKABLE void load(const QString& currentPageId);
-    Q_INVOKABLE bool askForConfirmationOfRepairReset();
-    Q_INVOKABLE void resetFactorySettings();
-    Q_INVOKABLE void apply();
-    Q_INVOKABLE void cancel();
     Q_INVOKABLE void selectRow(const QModelIndex& rowIndex);
 
     Q_INVOKABLE QVariantList availablePages() const;

@@ -23,5 +23,6 @@
         <file>qml/MuseScore/Playback/SoundFlagPopup.qml</file>
         <file>qml/MuseScore/Playback/internal/SoundFlag/MuseSoundsParams.qml</file>
         <file>qml/MuseScore/Playback/internal/SoundFlag/ParamsGridView.qml</file>
+        <file>qml/MuseScore/Playback/RepairPanel.qml</file>
     </qresource>
 </RCC>

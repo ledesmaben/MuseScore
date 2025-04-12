@@ -596,25 +596,7 @@ Ret ProjectActionsController::repairProject(const ProjectFile& file)
     // Allow the user to select their repair mode.
     openRepairDialog();
 
-    // # BGL TODO : selectScoreOpeningFile() causes the file selection prompt to come up. Perhaps this should be embedded in the dialogue?
-    if (file.isNull()) {
-        muse::io::path_t askedPath = selectScoreOpeningFile();
-
-        if (askedPath.empty()) {
-            return make_ret(Ret::Code::Cancel);
-        }
-
-        return repairProject(askedPath);
-    }
-
-    if (file.url.isLocalFile()) {
-        return repairProject(file.path(), file.displayNameOverride);
-    }
-
-    // In general, we shouldn't expect somebody to need to repair a broken score to musescore.com
-    // As a result, we simply exit as unsupported.
-
-    return make_ret(Err::UnsupportedUrl);
+    return make_ok();
 }
 
 Ret ProjectActionsController::repairProject(const muse::io::path_t& givenPath, const QString& displayNameOverride)

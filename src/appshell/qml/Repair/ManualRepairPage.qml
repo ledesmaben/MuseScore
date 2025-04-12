@@ -55,8 +55,6 @@ RepairPage {
             property var musicXMLPathFilter: repairModel.musicXMLPathFilter()
             property var scanPathFilter: repairModel.scanPathFilter()
 
-            isNeedRestart: repairModel.isNeedRestart
-
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
 
@@ -74,42 +72,5 @@ RepairPage {
         }
 
         SeparatorLine { }
-
-        /*
-         * TODO: https://github.com/musescore/MuseScore/issues/9807
-        KeyboardLayoutsSection {
-            keyboardLayouts: repairModel.keyboardLayouts
-            currentKeyboardLayout: repairModel.currentKeyboardLayout
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 2
-
-            onKeyboardLayoutSelected: function(keyboardLayout) {
-                repairModel.currentKeyboardLayout = keyboardLayout
-            }
-        }
-
-        SeparatorLine { }
-        */
-
-        /*
-         * TODO: https://github.com/musescore/MuseScore/issues/9807
-        SeparatorLine { }
-
-        RemoteControlSection {
-            isOSCRemoteControl: repairModel.isOSCRemoteControl
-            oscPort: repairModel.oscPort
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 4
-
-            onRemoteControlChanged: function(control) {
-                repairModel.isOSCRemoteControl = control
-            }
-
-            onPortChanged: function(port) {
-                repairModel.oscPort = port
-            }
-        }*/
     }
 }

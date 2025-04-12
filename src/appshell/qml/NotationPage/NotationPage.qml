@@ -439,6 +439,47 @@ DockPage {
         },
 
         DockPanel {
+            id: repairPanel
+
+            objectName: root.pageModel.repairPanelName()
+            title: qsTrc("appshell", "Repair")
+
+            height: 368
+            minimumHeight: root.horizontalPanelMinHeight
+            maximumHeight: root.horizontalPanelMaxHeight
+
+            groupName: root.horizontalPanelsGroup
+
+            //! NOTE: hidden by default
+            visible: true
+
+            location: Location.Bottom
+
+            dropDestinations: root.horizontalPanelDropDestinations
+
+            navigationSection: root.navigationPanelSec(repairPanel.location)
+
+            RepairPanel {
+                navigationSection: repairPanel.navigationSection
+                contentNavigationPanelOrderStart: repairPanel.contentNavigationPanelOrderStart
+
+                Component.onCompleted: {
+                    repairPanel.contextMenuModel = contextMenuModel
+                    repairPanel.toolbarComponent = toolbarComponent
+                }
+
+                Component.onDestruction: {
+                    repairPanel.contextMenuModel = null
+                    repairPanel.toolbarComponent = null
+                }
+
+                onResizeRequested: function(newWidth, newHeight) {
+                    repairPanel.resize(newWidth, newHeight)
+                }
+            }
+        },
+
+        DockPanel {
             id: pianoKeyboardPanel
 
             objectName: root.pageModel.pianoKeyboardPanelName()

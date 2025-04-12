@@ -32,8 +32,6 @@ BaseRepairSection {
 
     navigation.direction: NavigationPanel.Vertical
 
-
-    // BEGIN BGL Mods
     property string input_musicxml: ""
     property string input_scans: ""
     property string output_musicxml: ""
@@ -41,18 +39,6 @@ BaseRepairSection {
     signal selectInputMusicXML
     signal selectInputScans
     signal startRepair(var score, var scan)
-
-    // END BGL Mods
-
-
-    // BEGIN ORIGINAL ----|
-    property bool isNeedRestart: false
-
-    function setUpdateProgress(current, total, status) {
-        progressBtn.to = total
-        progressBtn.value = current
-        progressBtn.progressStatus = status
-    }
 
     Column {
         spacing: 24
@@ -111,10 +97,8 @@ BaseRepairSection {
             navigationPanel: root.navigation
 
             onClicked: {
-                // Dispatch the repair tool
-                // For now, simply save a copy of the score off as "repaired".
-                // Once that is working, we can continue investigating the repair UI
                 root.startRepair(root.input_musicxml,root.input_scans)
+                hideRequested()
             }
         }
 

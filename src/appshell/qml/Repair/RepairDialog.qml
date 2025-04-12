@@ -24,10 +24,8 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Preferences 1.0
 import MuseScore.Repair 1.0
 
-import "../Preferences/internal"
 import "internal"
 
 StyledDialogView {
@@ -101,19 +99,6 @@ StyledDialogView {
         }
     }
 
-// This is the "repairModel" - and it holds together some of the other components of this dialog.
-// Note that the term repairModel is also used elsewhere in this document.
-// This one has been commented out in order to make room for the RepairModel - which was created
-// as a copy of PreferencesModel and then changed.
-/*
-    PreferencesModel {
-        id: repairModel
-
-        onCurrentPageIdChanged: function(currentPageId) {
-            prv.updateStackCurrentIndex()
-        }
-    }
-*/
     RepairModel {
         id: repairModel
 
@@ -133,10 +118,6 @@ StyledDialogView {
 
             spacing: 0
 
-            // RepairMenu
-            // This is the piece that stacks all of the different selectable menu items. Seemingly this
-            // Is what needs to be modified to change the number of selectable menu tabs.
-            // If removed, the languages tab shows up and there is no way to switch to a different tab.
             RepairMenu {
                 id: menu
 
@@ -157,57 +138,5 @@ StyledDialogView {
         }
 
         SeparatorLine { }
-
-        // OK/Cancel Button Panel
-        // This is a section at the bottom of the dialog that houses the
-        // OK and Cancel buttons.
-        PreferencesButtonsPanel {
-            id: buttonsPanel
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: 70
-
-            navigation.section: root.navigationSection
-            navigation.order: 100000
-
-            onRevertFactorySettingsRequested: {
-                if (!repairModel.askForConfirmationOfPreferencesReset()) {
-                    return;
-                }
-
-                var pages = repairModel.availablePages()
-
-                for (var i in pages) {
-                    var page = pages[i]
-                    var obj = root.prv.pagesObjects[page.id]
-                    obj.reset()
-                }
-
-                repairModel.resetFactorySettings()
-            }
-
-            onRejectRequested: {
-                repairModel.cancel()
-                root.reject()
-            }
-
-            onApplyRequested: {
-                repairModel.apply()
-
-                var ok = true
-                var pages = repairModel.availablePages()
-
-                for (var i in pages) {
-                    var page = pages[i]
-                    var obj = root.prv.pagesObjects[page.id]
-                    ok &= obj.apply()
-                }
-
-                if (ok) {
-                    root.hide()
-                }
-            }
-        }
-        // END OK/Cancel Button Panel
     }
 }

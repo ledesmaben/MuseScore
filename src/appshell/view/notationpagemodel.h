@@ -69,6 +69,7 @@ public:
     Q_INVOKABLE QString undoHistoryPanelName() const;
 
     Q_INVOKABLE QString mixerPanelName() const;
+    Q_INVOKABLE QString repairPanelName() const;
     Q_INVOKABLE QString pianoKeyboardPanelName() const;
     Q_INVOKABLE QString timelinePanelName() const;
     Q_INVOKABLE QString drumsetPanelName() const;

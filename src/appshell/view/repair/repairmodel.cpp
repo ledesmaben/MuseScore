@@ -23,10 +23,8 @@
 
 #include "repairmodel.h"
 
-#include "translation.h"
 #include "ui/view/iconcodes.h"
 
-#include "log.h"
 
 using namespace mu::appshell;
 using namespace muse::ui;
@@ -38,8 +36,6 @@ RepairModel::RepairModel(QObject* parent)
 
 RepairModel::~RepairModel()
 {
-    cancel();
-
     delete m_rootItem;
     m_rootItem = nullptr;
 }
@@ -136,19 +132,12 @@ QString RepairModel::currentPageId() const
 
 void RepairModel::load(const QString& currentPageId)
 {
-    configuration()->startEditSettings();
-
     beginResetModel();
 
     if (!currentPageId.isEmpty()) {
         setCurrentPageId(currentPageId);
     } else {
-        const QString& lastOpenedPageId = configuration()->preferencesDialogLastOpenedPageId();
-        if (lastOpenedPageId.isEmpty()) {
-            setCurrentPageId("general");
-        } else {
-            setCurrentPageId(lastOpenedPageId);
-        }
+        setCurrentPageId("Manual");
     }
 
     m_rootItem = new RepairPageItem();
@@ -166,47 +155,6 @@ void RepairModel::load(const QString& currentPageId)
     }
 
     endResetModel();
-}
-
-bool RepairModel::askForConfirmationOfRepairReset()
-{
-    std::string title = muse::trc("appshell", "Are you sure you want to reset preferences?");
-    std::string question = muse::trc("appshell", "This action will reset all your app preferences and delete all custom shortcuts. "
-                                                 "It will not delete any of your scores.\n\n"
-                                                 "This action cannot be undone.");
-
-    muse::IInteractive::ButtonData cancelBtn = interactive()->buttonData(muse::IInteractive::Button::Cancel);
-    muse::IInteractive::ButtonData resetBtn = interactive()->buttonData(muse::IInteractive::Button::Reset);
-    cancelBtn.accent = true;
-
-    muse::IInteractive::Result result = interactive()->warning(title, question, { cancelBtn, resetBtn }, cancelBtn.btn,
-                                                               { muse::IInteractive::Option::WithIcon },
-                                                               muse::trc("appshell", "Reset preferences"));
-    return result.standardButton() == muse::IInteractive::Button::Reset;
-}
-
-void RepairModel::resetFactorySettings()
-{
-    static constexpr bool KEEP_DEFAULT_SETTINGS = true;
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
-    configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS);
-
-    // Unreset the "First Launch Completed" setting so the first-time launch wizard does not appear.
-    configuration()->setHasCompletedFirstLaunchSetup(true);
-
-    configuration()->startEditSettings();
-    QApplication::restoreOverrideCursor();
-}
-
-void RepairModel::apply()
-{
-    configuration()->applySettings();
-}
-
-void RepairModel::cancel()
-{
-    configuration()->rollbackSettings();
 }
 
 void RepairModel::selectRow(const QModelIndex& rowIndex)
@@ -265,7 +213,6 @@ void RepairModel::setCurrentPageId(QString currentPageId)
     }
 
     m_currentPageId = currentPageId;
-    configuration()->setPreferencesDialogLastOpenedPageId(currentPageId);
     emit currentPageIdChanged(m_currentPageId);
 }
 

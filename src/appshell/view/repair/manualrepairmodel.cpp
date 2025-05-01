@@ -82,6 +82,7 @@ void ManualRepairModel::startRepair(const QString& score, const QString& scan) c
         QString repairedPath = scorePath + info.baseName() + "_repaired" + "." + info.suffix();
 
         // Get the master notation from the open project.
+        repContext.get()->startRepair();
         notation::INotationPtrList notations;
         notations.push_back(globalContext()->currentMasterNotation()->notation());
         project::INotationWriter::UnitType m_selectedUnitType = project::INotationWriter::UnitType::PER_PART;

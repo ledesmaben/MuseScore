@@ -20,13 +20,17 @@
 
 declare_module(iex_repair)
 
-set(MODULE_QRC repair.qrc)
-
 set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/repaircontext.cpp
-
-    ${CMAKE_CURRENT_LIST_DIR}/internal/irepaircontext.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/irepaircontext.cpp
-
+    ${CMAKE_CURRENT_LIST_DIR}/internal/repaircontext.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/repaircontext.cpp
+	${CMAKE_CURRENT_LIST_DIR}/repairmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/repairmodule.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/irepaircontext.h
+   )
+   
+set(MODULE_LINK
+    engraving
+)
+	
 setup_module()
 

@@ -33,12 +33,15 @@
 
 #include "actions/iactionsdispatcher.h"
 
+#include "importexport/repair/irepaircontext.h"
+
 
 namespace mu::appshell {
 class ManualRepairModel : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::Inject<mu::notation::IRepairContext> repContext = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<project::IProjectFilesController> projectFilesController = { this };
     muse::Inject<project::IExportProjectScenario> exportProjectScenario = { this };

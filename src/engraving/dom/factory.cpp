@@ -123,12 +123,26 @@
 using namespace mu;
 using namespace mu::engraving;
 
+class repairContextProvider : public muse::Injectable
+{
+public:
+    muse::Inject<mu::notation::IRepairContext> repContext = { this };
+};
+
 EngravingItem* Factory::createItem(ElementType type, EngravingItem* parent, bool isAccessibleEnabled)
 {
     EngravingItem* item = doCreateItem(type, parent);
 
     if (item) {
         item->setAccessibleEnabled(isAccessibleEnabled);
+    }
+    static repairContextProvider repProvider;
+    if (repProvider.repContext.get() &&
+        repProvider.repContext.get()->repairEnabled())
+    {
+        repairData* repData = new repairData(true);
+        repairData::Ptr repDataPtr = std::make_shared<repairData>(repData);
+        item->setRepairData(repDataPtr);
     }
 
     return item;

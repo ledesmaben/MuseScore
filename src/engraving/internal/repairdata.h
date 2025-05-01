@@ -19,30 +19,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
-#define MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
+#ifndef MU_ENGRAVING_REPAIRDATA_H
+#define MU_ENGRAVING_REPAIRDATA_H
 
-#include "modularity/imoduleinterface.h"
-#include "../engraving/internal/repairdata.h"
+#include <memory>
 
-namespace mu::notation {
-using mu::engraving::repairData;
+namespace mu::engraving {
 
-class IRepairContext : MODULE_EXPORT_INTERFACE
+// Forward Declaration for Shared_ptr typedef
+class repairData;
+
+class repairData
 {
-    INTERFACE_ID(IRepairContext)
-
 public:
-    virtual ~IRepairContext() = default;
 
-    // set the current repair node.
-    virtual void setCurrentRepairNode(repairData::Ptr& r) = 0;
-    virtual repairData::Ptrc getCurrentRepairNode() const = 0;
-    virtual inline bool repairEnabled() = 0;
-    virtual inline void startRepair() = 0;
-    virtual inline void endRepair() = 0;
+    // Default constructor
+    repairData();
 
+    // Constructor initializing all member data
+    repairData(bool isnewin);
+
+    // Copy Constructor
+    repairData(const repairData& rhs);
+
+    bool isnew;
+
+    int i;
+
+    // Shared_ptr typedefs
+    typedef std::shared_ptr<repairData> Ptr;
+    typedef std::shared_ptr<const repairData> Ptrc;
 };
 }
 
-#endif // MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
+#endif // MU_ENGRAVING_REPAIRDATA_H

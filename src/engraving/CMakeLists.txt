@@ -249,6 +249,8 @@ else()
         ${CMAKE_CURRENT_LIST_DIR}/internal/engravingfontsprovider.h
         ${CMAKE_CURRENT_LIST_DIR}/internal/engravingfont.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internal/engravingfont.h
+		${CMAKE_CURRENT_LIST_DIR}/internal/repairdata.h
+		${CMAKE_CURRENT_LIST_DIR}/internal/repairdata.cpp
         ${API_V1_SRC}
         )
 endif()

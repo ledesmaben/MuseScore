@@ -137,6 +137,10 @@
 #include "global/realfn.h"
 #include "engraving/iengravingconfiguration.h"
 
+// for repair
+#include "importexport/repair/irepaircontext.h"
+#include "actions/iactionsdispatcher.h"
+
 #include "log.h"
 
 using namespace mu;
@@ -363,6 +367,9 @@ class ExportMusicXml : public muse::Injectable
 {
 public:
     static inline muse::GlobalInject<mu::iex::musicxml::IMusicXmlConfiguration> configuration;
+
+    muse::Inject<mu::notation::IRepairContext> repContext = { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher = { this };
     muse::Inject<muse::IApplication> application  = { this };
 
 public:

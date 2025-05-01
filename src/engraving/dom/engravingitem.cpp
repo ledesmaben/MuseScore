@@ -2432,6 +2432,17 @@ void EngravingItem::setColorsInverionEnabled(bool enabled)
     m_colorsInversionEnabled = enabled;
 }
 
+repairData::Ptr EngravingItem::repairData() const
+{
+    return m_repairData;
+}
+
+void EngravingItem::setRepairData(repairData::Ptr& repairDataIn)
+{
+    m_repairData = repairDataIn;
+    return;
+}
+
 EngravingItem::BarBeat EngravingItem::barbeat() const
 {
     EngravingItem::BarBeat barBeat = { 0, 0, 0.0F };

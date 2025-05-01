@@ -19,30 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
-#define MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
+#include "repairdata.h"
 
-#include "modularity/imoduleinterface.h"
-#include "../engraving/internal/repairdata.h"
+namespace mu::engraving{
 
-namespace mu::notation {
-using mu::engraving::repairData;
-
-class IRepairContext : MODULE_EXPORT_INTERFACE
+repairData::repairData() :
+    isnew(false),
+    i(3)
 {
-    INTERFACE_ID(IRepairContext)
 
-public:
-    virtual ~IRepairContext() = default;
-
-    // set the current repair node.
-    virtual void setCurrentRepairNode(repairData::Ptr& r) = 0;
-    virtual repairData::Ptrc getCurrentRepairNode() const = 0;
-    virtual inline bool repairEnabled() = 0;
-    virtual inline void startRepair() = 0;
-    virtual inline void endRepair() = 0;
-
-};
 }
 
-#endif // MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
+repairData::repairData(bool isnewin) :
+    isnew(isnewin),
+    i(4){
+
+}
+
+repairData::repairData(const repairData& rhs) :
+    isnew(rhs.isnew),
+    i(rhs.i){
+
+}
+
+
+}

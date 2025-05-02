@@ -187,6 +187,14 @@ const UiActionList ApplicationUiActions::m_actions = {
              IconCode::Code::MIXER,
              Checkable::Yes
              ),
+    UiAction("toggle-repair",
+             mu::context::UiCtxProjectOpened,
+             mu::context::CTX_ANY,
+             TranslatableString("action", "Repair"),
+             TranslatableString("action", "Show/hide repair menu"),
+             IconCode::Code::CONFIGURE,
+             Checkable::Yes
+             ),
     UiAction("toggle-piano-keyboard",
              mu::context::UiCtxProjectOpened,
              mu::context::CTX_ANY,
@@ -339,6 +347,7 @@ const QMap<ActionCode, DockName>& ApplicationUiActions::toggleDockActions()
 
         { "toggle-timeline", TIMELINE_PANEL_NAME },
         { "toggle-mixer", MIXER_PANEL_NAME },
+        { "toggle-repair", REPAIR_PANEL_NAME },
         { "toggle-piano-keyboard", PIANO_KEYBOARD_PANEL_NAME },
         { "toggle-percussion-panel", PERCUSSION_PANEL_NAME },
 

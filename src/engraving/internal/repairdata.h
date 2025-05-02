@@ -19,37 +19,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef MU_ENGRAVING_REPAIRDATA_H
+#define MU_ENGRAVING_REPAIRDATA_H
 
-#include "notationtoolbarmodel.h"
+#include <memory>
 
-#include "uicomponents/view/toolbaritem.h"
+namespace mu::engraving {
 
-using namespace mu::notation;
-using namespace muse::uicomponents;
-using namespace muse::actions;
+// Forward Declaration for Shared_ptr typedef
+class repairData;
 
-void NotationToolBarModel::load()
+class repairData
 {
-    muse::actions::ActionCodeList itemsCodes = {
-        "parts",
-        "toggle-mixer",
-        "toggle-repair"
-    };
+public:
 
-    ToolBarItemList items;
-    for (const ActionCode& code : itemsCodes) {
-        ToolBarItem* item = makeItem(code);
-        item->setShowTitle(true);
-        item->setIsTitleBold(true);
+    // Default constructor
+    repairData();
 
-        items << item;
-    }
+    // Constructor initializing all member data
+    repairData(bool isnewin);
 
-    setItems(items);
+    // Copy Constructor
+    repairData(const repairData& rhs);
 
-    context()->currentMasterNotationChanged().onNotify(this, [this]() {
-        load();
-    });
+    bool isnew;
 
-    AbstractToolBarModel::load();
+    int i;
+
+    // Shared_ptr typedefs
+    typedef std::shared_ptr<repairData> Ptr;
+    typedef std::shared_ptr<const repairData> Ptrc;
+};
 }
+
+#endif // MU_ENGRAVING_REPAIRDATA_H

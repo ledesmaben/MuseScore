@@ -41,6 +41,8 @@
 #include "view/soundprofilesmodel.h"
 #include "view/internal/soundflag/soundflagsettingsmodel.h"
 
+#include "view/repairpanelmodel.h"
+
 using namespace mu::playback;
 using namespace muse;
 using namespace muse::modularity;
@@ -93,6 +95,7 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterType<PlaybackToolBarModel>("MuseScore.Playback", 1, 0, "PlaybackToolBarModel");
     qmlRegisterType<PlaybackLoadingModel>("MuseScore.Playback", 1, 0, "PlaybackLoadingModel");
     qmlRegisterType<MixerPanelModel>("MuseScore.Playback", 1, 0, "MixerPanelModel");
+    qmlRegisterType<RepairPanelModel>("MuseScore.Playback", 1, 0, "RepairPanelModel");
     qmlRegisterType<MixerPanelContextMenuModel>("MuseScore.Playback", 1, 0, "MixerPanelContextMenuModel");
     qmlRegisterType<SoundProfilesModel>("MuseScore.Playback", 1, 0, "SoundProfilesModel");
 

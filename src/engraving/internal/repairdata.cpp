@@ -19,37 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#include "repairdata.h"
 
-#include "notationtoolbarmodel.h"
+namespace mu::engraving{
 
-#include "uicomponents/view/toolbaritem.h"
-
-using namespace mu::notation;
-using namespace muse::uicomponents;
-using namespace muse::actions;
-
-void NotationToolBarModel::load()
+repairData::repairData() :
+    isnew(false),
+    i(3)
 {
-    muse::actions::ActionCodeList itemsCodes = {
-        "parts",
-        "toggle-mixer",
-        "toggle-repair"
-    };
 
-    ToolBarItemList items;
-    for (const ActionCode& code : itemsCodes) {
-        ToolBarItem* item = makeItem(code);
-        item->setShowTitle(true);
-        item->setIsTitleBold(true);
+}
 
-        items << item;
-    }
+repairData::repairData(bool isnewin) :
+    isnew(isnewin),
+    i(4){
 
-    setItems(items);
+}
 
-    context()->currentMasterNotationChanged().onNotify(this, [this]() {
-        load();
-    });
+repairData::repairData(const repairData& rhs) :
+    isnew(rhs.isnew),
+    i(rhs.i){
 
-    AbstractToolBarModel::load();
+}
+
+
 }

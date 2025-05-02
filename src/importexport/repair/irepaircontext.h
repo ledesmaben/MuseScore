@@ -19,37 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
+#define MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H
 
-#include "notationtoolbarmodel.h"
+#include "modularity/imoduleinterface.h"
+#include "../engraving/internal/repairdata.h"
 
-#include "uicomponents/view/toolbaritem.h"
+namespace mu::notation {
+using mu::engraving::repairData;
 
-using namespace mu::notation;
-using namespace muse::uicomponents;
-using namespace muse::actions;
-
-void NotationToolBarModel::load()
+class IRepairContext : MODULE_EXPORT_INTERFACE
 {
-    muse::actions::ActionCodeList itemsCodes = {
-        "parts",
-        "toggle-mixer",
-        "toggle-repair"
-    };
+    INTERFACE_ID(IRepairContext)
 
-    ToolBarItemList items;
-    for (const ActionCode& code : itemsCodes) {
-        ToolBarItem* item = makeItem(code);
-        item->setShowTitle(true);
-        item->setIsTitleBold(true);
+public:
+    virtual ~IRepairContext() = default;
 
-        items << item;
-    }
+    // set the current repair node.
+    virtual void setCurrentRepairNode(repairData::Ptr& r) = 0;
+    virtual repairData::Ptrc getCurrentRepairNode() const = 0;
+    virtual inline bool repairEnabled() = 0;
+    virtual inline void startRepair() = 0;
+    virtual inline void endRepair() = 0;
 
-    setItems(items);
-
-    context()->currentMasterNotationChanged().onNotify(this, [this]() {
-        load();
-    });
-
-    AbstractToolBarModel::load();
+};
 }
+
+#endif // MU_IMPORTEXPORT_REPAIR_IREPAIRCONTEXT_H

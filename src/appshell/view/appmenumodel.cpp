@@ -180,6 +180,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeSeparator(),
         makeMenuItem("file-import-pdf"),
         makeMenuItem("file-export"),
+        makeMenuItem("file-repair"),
         makeMenuItem("file-share-audio"),
         makeSeparator(),
         makeMenuItem("project-properties"),
@@ -259,6 +260,7 @@ MenuItem* AppMenuModel::makeViewMenu()
         makeMenuItem("toggle-braille-panel"),
         makeMenuItem("toggle-timeline"),
         makeMenuItem("toggle-mixer"),
+        makeMenuItem("toggle-repair"),
         makeMenuItem("toggle-piano-keyboard"),
         // makeMenuItem("toggle-percussion-panel"), // still in development
         makeMenuItem("playback-setup"),

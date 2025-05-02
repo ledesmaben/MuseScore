@@ -24,9 +24,9 @@
 
 #include "modularity/imoduleinterface.h"
 #include "notation/inotation.h"
-#include "inotationwriter.h"
+#include "../inotationwriter.h"
 #include "exporttype.h"
-#include "types/projecttypes.h"
+#include "../types/projecttypes.h"
 
 namespace mu::project {
 class IExportProjectScenario : MODULE_EXPORT_INTERFACE

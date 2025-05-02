@@ -19,37 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#include "repairmodule.h"
 
-#include "notationtoolbarmodel.h"
+#include "modularity/ioc.h"
 
-#include "uicomponents/view/toolbaritem.h"
+#include "internal/repaircontext.h"
 
+#include "log.h"
+
+using namespace muse;
+using namespace mu::iex::repair;
 using namespace mu::notation;
-using namespace muse::uicomponents;
-using namespace muse::actions;
 
-void NotationToolBarModel::load()
-{
-    muse::actions::ActionCodeList itemsCodes = {
-        "parts",
-        "toggle-mixer",
-        "toggle-repair"
-    };
 
-    ToolBarItemList items;
-    for (const ActionCode& code : itemsCodes) {
-        ToolBarItem* item = makeItem(code);
-        item->setShowTitle(true);
-        item->setIsTitleBold(true);
 
-        items << item;
-    }
 
-    setItems(items);
-
-    context()->currentMasterNotationChanged().onNotify(this, [this]() {
-        load();
-    });
-
-    AbstractToolBarModel::load();
-}

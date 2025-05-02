@@ -34,8 +34,8 @@
 #include "projectmeta.h"
 
 #include "cloud/cloudtypes.h"
-#include "notation/inotation.h"
-#include "notation/notationtypes.h"
+#include "../notation/inotation.h"
+#include "../notation/notationtypes.h"
 #include "../inotationwriter.h"
 
 namespace mu::project {

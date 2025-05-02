@@ -197,6 +197,9 @@
 #include "wasmtest/wasmtestmodule.h"
 #endif
 
+//TODO : implement #ifdefs
+#include "importexport/repair/repairmodule.h"
+
 using namespace muse;
 using namespace mu::app;
 
@@ -322,6 +325,8 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CmdOptions& opti
     app->addModule(new mu::wasmtest::WasmTestModule());
 #endif
 
+    app->addModule(new iex::repair::RepairModule());
+
     return app;
 }
 
@@ -424,6 +429,8 @@ std::shared_ptr<muse::IApplication> AppFactory::newConsoleApp(const CmdOptions& 
 #ifdef Q_OS_WASM
     app->addModule(new mu::wasmtest::WasmTestModule());
 #endif
+
+    app->addModule(new iex::repair::RepairModule());
 
     return app;
 }

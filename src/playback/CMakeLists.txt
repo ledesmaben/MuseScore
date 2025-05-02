@@ -71,6 +71,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/playbackloadingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/soundprofilesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/soundprofilesmodel.h
+	${CMAKE_CURRENT_LIST_DIR}/view/repairpanelmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/repairpanelmodel.h
     )
 
 if (MUE_BUILD_PLAYBACK_TESTS)

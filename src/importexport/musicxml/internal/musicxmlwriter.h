@@ -22,10 +22,15 @@
 #pragma once
 
 #include "project/inotationwriter.h"
+#include "importexport/repair/irepaircontext.h"
+//TEMP
+#include "actions/iactionsdispatcher.h"
 
 namespace mu::iex::musicxml {
-class MusicXmlWriter : public project::INotationWriter
+class MusicXmlWriter : public project::INotationWriter, public muse::Injectable
 {
+    muse::Inject<mu::notation::IRepairContext> repContext = { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher = { this };
 public:
 
     std::vector<UnitType> supportedUnitTypes() const override;

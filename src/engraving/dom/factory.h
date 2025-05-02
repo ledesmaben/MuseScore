@@ -28,6 +28,10 @@
 #include "durationtype.h"
 #include "types.h"
 
+// for repair
+#include "importexport/repair/irepaircontext.h"
+#include "actions/iactionsdispatcher.h"
+
 namespace mu::engraving {
 class Instrument;
 class RootItem;

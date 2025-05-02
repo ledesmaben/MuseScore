@@ -45,6 +45,8 @@
 #include "elementgroup.h"
 #include "editdata.h"
 
+#include "../internal/repairdata.h"
+
 #define DECLARE_LAYOUTDATA_METHODS(Class) \
     const LayoutData* ldata() const { return static_cast<const Class::LayoutData*>(EngravingItem::ldata()); } \
     LayoutData* mutldata() { return static_cast<Class::LayoutData*>(EngravingItem::mutldata()); } \
@@ -489,6 +491,9 @@ public:
     bool colorsInversionEnabled() const;
     void setColorsInverionEnabled(bool enabled);
 
+    repairData::Ptr repairData() const;
+    void setRepairData(repairData::Ptr& repairDataIn);
+
     struct BarBeat
     {
         int bar;
@@ -732,6 +737,8 @@ private:
     bool m_colorsInversionEnabled = true;
 
     mutable LayoutData* m_layoutData = nullptr;
+
+    repairData::Ptr m_repairData = nullptr;
 };
 
 using ElementPtr = std::shared_ptr<EngravingItem>;
